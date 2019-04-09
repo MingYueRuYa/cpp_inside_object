@@ -57,6 +57,32 @@ OptimizationA ProgramerPerspective()
 {
 	OptimizationA oa(1, 2);
 	return oa;
+//  return OptimizationA(1, 2);
+    //  linux上如果关闭开优化选项的话，上面三行的代码效率是一样的
+//  result:
+//    compiler:1 level:2 call ctor
+//    compiler:2 level:3 call copy ctor
+//    compiler:1 level:2 call dtor
+//    compiler:3 level:4 call copy ctor
+//    compiler:2 level:3 call dtor
+//    compiler:3 level:4 call dtor
+    // 在linux上打开优化选项
+    // 上面三行代码效率一样
+//    compiler:1 level:2 call ctor
+//    compiler:1 level:2 call dtor
+
+//	OptimizationA oa(1, 2);
+//	return oa;
+    // 在windows上
+//    compiler:1 level:2 call ctor
+//    compiler:2 level:3 call copy ctor
+//    compiler:1 level:2 call dtor
+//    compiler:2 level:3 call dtor
+
+//  return OptimizationA(1, 2);
+    // 在windows上
+//    compiler:1 level:2 call ctor
+//    compiler:1 level:2 call dtor
 }
 
 void test_compiler_optimization()
