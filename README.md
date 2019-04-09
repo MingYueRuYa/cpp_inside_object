@@ -1,6 +1,5 @@
 # cpp_inside_object
 对C++对象模型探究的学习代码
-.
 polymorphism_virtual
 build_linux
     Makefile
@@ -22,4 +21,3 @@ source
     objsize.h
 README.md
 
-4 directories, 12 files
