@@ -55,8 +55,13 @@ private:
 // 程序员视角
 OptimizationA ProgramerPerspective()
 {
-	OptimizationA oa(1, 2);
-	return oa;
+	// 调用OptimizationA构造函数
+	OptimizationA oatemp(1, 2);
+	return oatemp;
+	// 先是生成了一个临时对象tempobj，然后调用tempobj的拷贝构造函数，将oa的数据拷贝到
+	// tempobj中，然后在调用oa的析构函数。
+	// 这个过程中消耗了一个oa的，构造和析构函数，tempobj的拷贝构造和析构函数
+
 //  return OptimizationA(1, 2);
     //  linux上如果关闭开优化选项的话，上面三行的代码效率是一样的
 //  result:
@@ -87,7 +92,14 @@ OptimizationA ProgramerPerspective()
 
 void test_compiler_optimization()
 {
+	// 程序员的角度看
 	OptimizationA oa = ProgramerPerspective();	
+
+	// 编译器的角度看
+//	OptimizationA ob;	编译器角度是不会调用OptimizationA的构造函数，下面的才是调用
+//	ob.OptimizationA::OptimizationA(10, 20);
+//	OptimizationA tempobj; 这里编译器也不会调用构造函数
+//	tempobj.OptimizationA::OptimizationA(ob);
 }
 
 }

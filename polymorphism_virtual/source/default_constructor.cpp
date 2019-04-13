@@ -21,19 +21,49 @@ using std::endl;
 namespace defualt_constructor
 {
 
-// #define has_default_ctor_memeber 1
-#define has_inherit_ctor_base 1
+// 含有缺省的构造函数成员类对象
+// #define has_default_ctor_member 1
+
+// 继承含有缺省的构造函数
+// #define has_inherit_ctor_base 1
+
+// 含有虚函数成员函数
 // #define has_virtual_function 1
+
+// 函数virtual函数的成员类对象
 // #define has_virtual_func_member 1
+
+// 父类含有虚函数
+// #define has_inherit_virtual_func_base 1
 
 // MatrixC, MatrixB 虚继承MatrixD
 // #define has_virtual_inherit_base 1
+
+// 类成员变量含有copy ctor
+// #define has_default_copy_ctor_member 1
+
+// 父类含有拷贝构造函数
+#define has_inherit_copy_ctor_base 1
+
+// 含有虚函数成员函数
+// #define has_virtual_function_copy_ctor 1
+
+// 类对象成员含有虚函数
+// #define has_virtual_function_copy_ctor_member 1
+
+// 父类函数虚函数
+// #define has_inherit_virtual_function_copy_ctor_base 1
+
+// 虚继承copy ctor
+// #define has_virtual_inherit_function_copy_ctor_base 1
 
 class MatrixD
 {
 };
 
 #ifdef  has_virtual_inherit_base
+class MatrixC : virtual public MatrixD
+#elif has_virtual_inherit_function_copy_ctor_base
 class MatrixC : virtual public MatrixD
 #else
 class MatrixC
@@ -42,60 +72,92 @@ class MatrixC
 public: 
 #ifdef has_inherit_ctor_base
 	MatrixC() { cout << "MatrixC" << endl; }
+#elif has_inherit_copy_ctor_base
+	MatrixC() {}
+	MatrixC(const MatrixC &rhs) { cout << "MatrixC copy ctor" << endl; }
+#elif has_inherit_virtual_function_copy_ctor_base
+	virtual void VirFun() {}
+#elif has_inherit_virtual_func_base
+	virtual void VirFun() {}
 #endif // has_virtual_inherit_base
 };
 
 #ifdef has_virtual_inherit_base
+class MatrixB : virtual public MatrixD
+#elif has_virtual_inherit_function_copy_ctor_base
 class MatrixB : virtual public MatrixD
 #else
 class MatrixB
 #endif // has_virtual_inherit_base
 {
 public:
-#ifdef has_default_ctor_memeber
+#ifdef has_default_ctor_member
 	MatrixB() { cout << "MatrixB" << endl; }
 #elif has_virtual_func_member
 	virtual void VirMatrixB() { cout << "virtual MatrixB" << endl; }
-#endif // has_default_ctor_memeber
+#elif has_default_copy_ctor_member
+	MatrixB() {}
+	MatrixB(const MatrixB &rhs) { cout << "copy ctor MatrixB" << endl; }
+#elif has_virtual_function_copy_ctor_member
+	virtual void VirMatrixB() { cout << "virtual MatrixB" << endl; }
+#endif // has_default_ctor_member
 
 	int m_high;
 	int m_width;
 };
 
-#ifdef has_default_ctor_memeber
+#ifdef has_default_ctor_member
 class MatrixA
 #elif has_virtual_function
 class MatrixA
 #elif has_inherit_ctor_base
 class MatrixA : public MatrixC
+#elif has_inherit_copy_ctor_base
+class MatrixA : public MatrixC
 #elif has_virtual_func_member
 class MatrixA
 #elif has_virtual_inherit_base
 class MatrixA : public MatrixB, public MatrixC
+#elif has_inherit_virtual_func_base 
+class MatrixA: public MatrixC
+#elif has_inherit_virtual_function_copy_ctor_base
+class MatrixA : public MatrixC
+#elif has_virtual_inherit_function_copy_ctor_base
+class MatrixA : public MatrixB, public MatrixC
 #else
 class MatrixA
-#endif // has_default_ctor_memeber
+#endif // has_default_ctor_member
 {
 public:
 	int m_age;
 	int m_score;
 
-#ifdef has_default_ctor_memeber
+#ifdef has_default_ctor_member
 	MatrixB matrixB;
 #elif has_virtual_function
 	virtual void VirFunc() { cout << "virtual function" << endl; }
 #elif has_virtual_func_member
 	MatrixB matrixB;
-#endif // has_default_ctor_memeber
+#elif has_default_copy_ctor_member
+	MatrixA() {}
+	MatrixB matrixB;
+#elif has_inherit_copy_ctor_base
+	MatrixA() {}
+#elif has_virtual_function_copy_ctor
+	virtual void VirFunc() { cout << "virtual function" << endl; }
+#elif has_virtual_function_copy_ctor_member
+	MatrixB matrixB;
+#endif // has_default_ctor_member
 
 };
 
-void test_compiler_generator_default_constrcuctor()
+void test_compiler_generator_def_ctor()
 {
 	//用dumpbin把.obj文件内容导出成可查看文件my.txt，
 	// 这个my.txt格式，一般被认为是COFF：通用对象文件格式(Common Object File Format);
 
 	MatrixA matrix;
+	matrix.m_age = 0;
 
 	// 编译器会在哪些情况下合成默认的构造函数？
 	// 1.包含一个类成员变量，此成员变量含有默认的缺省构造函数。此时编译器就会
@@ -118,7 +180,15 @@ void test_compiler_generator_default_constrcuctor()
 	//	1.不管是自己包含虚函数，还是类成员变量有虚函数，还是父类中虚函数
 
 	// C.虚继承
-	//	1.编译器为了在插入vttable 虚基类表
+	//	1.编译器为了在插入vbtable 虚基类表
+}
+
+void test_compiler_generator_def_copy_ctor()
+{
+	MatrixA ma;
+
+	MatrixA	mb = ma;
+	// 编译器合成默认copy ctor时机和ctor是一样的
 }
 
 }

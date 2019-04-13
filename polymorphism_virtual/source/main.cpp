@@ -9,7 +9,7 @@
 using std::cout;
 using std::endl;
 
-#ifdef _MSC_VER_
+#ifdef _MSC_VER
 
 class ClassA
 {
@@ -328,8 +328,7 @@ void test_memeber_layout()
 }
 
 }
-#endif // _MSC_VER_
-
+#endif // _MSC_VER
 
 int main(int argc, char *argv[])
 {
@@ -345,9 +344,9 @@ int main(int argc, char *argv[])
 
 	// analysis_adjust_this::test_this_point_address();
 
-	// defualt_constructor::test_compiler_generator_default_constrcuctor();
-	
-	compiler_optimization::test_compiler_optimization();
+	// defualt_constructor::test_compiler_generator_def_ctor();
+	defualt_constructor::test_compiler_generator_def_copy_ctor();
+	// compiler_optimization::test_compiler_optimization();
 	
 #ifdef _MSC_VER
 	system("pause");
