@@ -22,6 +22,11 @@ namespace compiler_optimization
 class OptimizationA
 {
 public:
+	OptimizationA() 
+		: type_compiler(0),
+		  type_level(0)
+	{}
+
 	OptimizationA(int compiler, int level) 
 		: type_compiler(compiler),
 		  type_level(level)
@@ -46,6 +51,8 @@ public:
              << " level:" << type_level
              << " call dtor" << endl; 
     }
+
+	void test_function() { cout << "test function" << endl; }
 
 private:
 	int type_compiler;
@@ -90,16 +97,52 @@ OptimizationA ProgramerPerspective()
 //    compiler:1 level:2 call dtor
 }
 
+// 编译器的视角
+void CompilerPerpective(OptimizationA &temp)
+{
+	return;
+}
+
+
 void test_compiler_optimization()
 {
-	// 程序员的角度看
+	// 1.程序员的角度看，class作为返回值处理
 	OptimizationA oa = ProgramerPerspective();	
-
 	// 编译器的角度看
-//	OptimizationA ob;	编译器角度是不会调用OptimizationA的构造函数，下面的才是调用
-//	ob.OptimizationA::OptimizationA(10, 20);
-//	OptimizationA tempobj; 这里编译器也不会调用构造函数
-//	tempobj.OptimizationA::OptimizationA(ob);
+//	OptimizationA oa;
+//	CompilerPerpective(oa);
+
+	// 2.程序员的角度看，copy构造现象
+	OptimizationA oc = oa;
+	// 编译器的角度看问题
+//	OptimizationA oc; // 不会调用OptimizationA的构造函数
+//	oc.OptimizationA::OptimizationA(oc);
+
+	// 3.程序员的视角，class作为返回值处理调用成员函数
+	ProgramerPerspective().test_function();
+	// 切换到编译器
+	OptimizationA od; // 不会调用OptimizationA的构造函数
+	(CompilerPerpective(od), od).test_function();
+	
+	// 4.程序员的视角，函数指针
+	OptimizationA (*pf)();
+	pf = ProgramerPerspective;
+	pf().test_function();	
+	// 切换到编译器
+	OptimizationA oe;	
+	void (*pf1)(OptimizationA &);
+	pf1 = CompilerPerpective;
+	(pf1(oe), oe).test_function();
+
+	// 编译器角度是不会调用OptimizationA的构造函数
+	OptimizationA ob; // 下面的才是调用
+	// 手动调用构造函数
+	ob.OptimizationA::OptimizationA(10, 20);
+	// 这里编译器也不会调用构造函数
+	OptimizationA tempobj;
+	// 手动调用copy构造函数
+	tempobj.OptimizationA::OptimizationA(ob);
+
 }
 
 }

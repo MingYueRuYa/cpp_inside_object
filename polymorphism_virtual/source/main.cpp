@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
 	// defualt_constructor::test_compiler_generator_def_ctor();
 	defualt_constructor::test_compiler_generator_def_copy_ctor();
 	// compiler_optimization::test_compiler_optimization();
-	
+
 #ifdef _MSC_VER
 	system("pause");
 #endif //_MSC_VER
