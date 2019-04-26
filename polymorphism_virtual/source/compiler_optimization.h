@@ -59,6 +59,36 @@ private:
 	int type_level;
 };
 
+class OptimizationB
+{
+public:
+	OptimizationB() 
+		: type_compiler(0)
+	{}
+
+	OptimizationB(int compiler) 
+		: type_compiler(compiler)
+	{ 
+        cout << "compiler:" << type_compiler << endl;
+    }
+
+	OptimizationB(const OptimizationB &rhs)
+		: type_compiler(rhs.type_compiler+1)
+	{ 
+        cout << "compiler:" << type_compiler 
+             << " call copy ctor" << endl; 
+    }
+
+	virtual ~OptimizationB()
+	{ 
+        cout << "compiler:" << type_compiler 
+             << " call dtor" << endl; 
+    }
+
+private:
+	int type_compiler;
+};
+
 // 程序员视角
 OptimizationA ProgramerPerspective()
 {
@@ -103,6 +133,21 @@ void CompilerPerpective(OptimizationA &temp)
 	return;
 }
 
+void test_initialization()
+{
+	OptimizationB ob = 1000;
+	OptimizationB oc = (OptimizationB)1000;
+	OptimizationB od = OptimizationB(1000);
+	// 测试在vs2013下面，上面的三种情况都是调用了带一个参数的构造函数
+	// 可能在其他编译器下面情形不一样，但是都是为了提高效率
+	// 一般都建议要自定义自己的copy constructor，不管是否都具有资源
+
+
+	// 初始化有3中情况：
+	// 1.显示初始化
+	// 2.参数初始化
+	// 3.返回值初始化
+}
 
 void test_compiler_optimization()
 {

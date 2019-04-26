@@ -345,8 +345,9 @@ int main(int argc, char *argv[])
 	// analysis_adjust_this::test_this_point_address();
 
 	// defualt_constructor::test_compiler_generator_def_ctor();
-	defualt_constructor::test_compiler_generator_def_copy_ctor();
+	// defualt_constructor::test_compiler_generator_def_copy_ctor();
 	// compiler_optimization::test_compiler_optimization();
+	compiler_optimization::test_shallow_deep_copy();
 
 #ifdef _MSC_VER
 	system("pause");
