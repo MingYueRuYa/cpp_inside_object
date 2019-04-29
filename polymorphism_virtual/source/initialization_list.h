@@ -74,9 +74,9 @@ public:
 	}
 
 private:
+	InitialzationA m_IA;
 	int m_a;
 	int m_b;
-	InitialzationA m_IA;
 };
 
 }

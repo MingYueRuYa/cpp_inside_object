@@ -25,7 +25,9 @@ public:
 	OptimizationA() 
 		: type_compiler(0),
 		  type_level(0)
-	{}
+	{
+		cout <<"OptimizationA ctor" << endl;
+	}
 
 	OptimizationA(int compiler, int level) 
 		: type_compiler(compiler),
@@ -97,7 +99,7 @@ OptimizationA ProgramerPerspective()
 	return oatemp;
 	// 先是生成了一个临时对象tempobj，然后调用tempobj的拷贝构造函数，将oa的数据拷贝到
 	// tempobj中，然后在调用oa的析构函数。
-	// 这个过程中消耗了一个oa的，构造和析构函数，tempobj的拷贝构造和析构函数
+	// 这个过程中消耗了一个tempobj的拷贝构造和析构函数
 
 //  return OptimizationA(1, 2);
     //  linux上如果关闭开优化选项的话，上面三行的代码效率是一样的
@@ -143,10 +145,45 @@ void test_initialization()
 	// 一般都建议要自定义自己的copy constructor，不管是否都具有资源
 
 
+	cout << "-------------------" << endl;
+	OptimizationA oe;
+	cout << "-------------------" << endl;
+	OptimizationA of(oe);
+	cout << "-------------------" << endl;
+	OptimizationA og = OptimizationA(1, 2);
+	cout << "-------------------" << endl;
+	OptimizationA oh = OptimizationA(oe);
+	cout << "-------------------" << endl;
+
+	// -------------------
+	// OptimizationA ctor
+	// -------------------
+	// compiler:1 level:1 call copy ctor
+	// -------------------
+	// compiler:1 level:2 call ctor
+	// -------------------
+	// compiler:1 level:1 call copy ctor
+	// -------------------
+	// compiler:1 level:1 call dtor
+	// compiler:1 level:2 call dtor
+	// compiler:1 level:1 call dtor
+	// compiler:0 level:0 call dtor
+
 	// 初始化有3中情况：
 	// 1.显示初始化
 	// 2.参数初始化
 	// 3.返回值初始化
+	
+//	OptimizationA oe;
+//	OptimizationA of(oe);
+//	OptimizationA og = oe;
+//	OptimizationA oh = OptimizationA(oe);
+//	// 编译器的角度看，分成两步走
+//	// 1.OptimizationA of (注意此时不会调用OptimizationA的默认构造函数)
+//	// 2.of.OptimizationA::OptimizationA(oe) (调用拷贝构造函数)
+//	// 3.og.OptimizationA::OptimizationA(oe) (调用拷贝构造函数)
+//	// 4.oh.OptimizationA::OptimizationA(oe) (调用拷贝构造函数)
+	
 }
 
 void test_compiler_optimization()
