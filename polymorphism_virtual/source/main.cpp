@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "objsize.h"
+#include "virtual_fun_table.h"
 #include "analysis_adjust_this.h"
 #include "default_constructor.cpp"
 #include "compiler_optimization.h"
@@ -346,8 +347,14 @@ int main(int argc, char *argv[])
 
 	// defualt_constructor::test_compiler_generator_def_ctor();
 	// defualt_constructor::test_compiler_generator_def_copy_ctor();
+
 	// compiler_optimization::test_compiler_optimization();
-	compiler_optimization::test_initialization();
+	// compiler_optimization::test_initialization();
+
+    // virtual_fun_table::test_virtual_fun_address();
+    // virtual_fun_table::test_manual_call_virtual_fun();
+    // virtual_fun_table::test_call_virtual_fun();
+    virtual_fun_table::test_multi_inhert_virtual_fun();
 
 #ifdef _MSC_VER
 	system("pause");

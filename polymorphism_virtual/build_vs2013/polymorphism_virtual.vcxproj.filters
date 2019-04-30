@@ -26,5 +26,11 @@
     <ClInclude Include="..\source\compiler_optimization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\initialization_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\virtual_fun_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
