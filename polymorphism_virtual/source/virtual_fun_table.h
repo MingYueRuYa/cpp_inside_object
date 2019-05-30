@@ -135,7 +135,8 @@ void test_call_virtual_fun()
     Derive *d2 = new Derive();
 
 
-    // 2.一个类中包括虚函数，那么就会生成一个虚函数表。同一个类共用一个虚函数表
+    // 2.一个类中包括虚函数，那么就会生成一个虚函数表。同一个类共用一个虚函数表，
+    // 类似static成员变量
     // (虚函数表的地址是一样的，但是虚函数指针不一样)，
     // 子类有自己的虚函数表，父类也有自己的虚函数表。如果子类有一个父类，那么就会一个
     // 虚函数表，多个父类的话，那么就有可能有多个虚函数表。
@@ -171,6 +172,66 @@ void test_multi_inhert_virtual_fun()
     ((Fun)(baseone_table_address[1]))();
     ((Fun)(baseone_table_address[2]))();
 
+}
+
+class MemsetObj {
+public:
+    int x;
+    int y;
+    int z;
+public:
+    MemsetObj()
+    {
+        // 清空虚函数表指针
+        memset(this, 0, sizeof(MemsetObj));
+        cout << "memsetobj ctor" << endl;
+    }
+
+    MemsetObj(const MemsetObj &obj)
+    {
+        // 这里同样清空虚函数表指针
+        memcpy(this, &obj, sizeof(MemsetObj));
+        cout << "memsetobj copy ctor" << endl;
+    }
+
+    ~MemsetObj()
+    {
+        cout << "memsetobj dctor" << endl;
+    }
+
+    void test() { cout << "memset obj test" << endl; }
+    virtual void virtual_func() {  cout << "virtual test" << endl; }
+};
+
+void test_memset_virtual_fun()
+{
+    MemsetObj obj;
+    obj.test();
+    // 虚函数表已经memset为0，但是虚函数还能调用成功
+    // 这里并没有体现多态，属于静态联编:在编译的时候就确定语句
+    obj.virtual_func();
+
+    // 从反汇编的角度看，这里是直接调用的，只用了2行代码
+// 010B9AC7  lea         ecx,[obj]  
+// 010B9ACA  call        virtual_fun_table::MemsetObj::virtual_func (010B154Bh)  
+
+    MemsetObj *pobj = new MemsetObj();
+    pobj->test();
+    // shutdown
+    // 这里体现多态，属于动态联编:在程序运行的时候，根据实际情况，
+    // 动态的把调用语句和被调用函数绑定到一起
+    pobj->virtual_func();
+    // 从反汇编的角度看，这里动态的获取，先找到虚表指针，再找到虚表地址，再找到虚函数
+    // 可以间接的看出为了实现多态，效率有一定的降低
+// 010B9B2A  mov         eax,dword ptr [pobj]  
+// 010B9B2D  mov         edx,dword ptr [eax]  
+// 010B9B2F  mov         esi,esp  
+// 010B9B31  mov         ecx,dword ptr [pobj]  
+// 010B9B34  mov         eax,dword ptr [edx]  
+// 010B9B36  call        eax  
+// 010B9B38  cmp         esi,esp  
+// 010B9B3A  call        __RTC_CheckEsp (010B147Eh) 
+    delete pobj;
 }
 
 }
