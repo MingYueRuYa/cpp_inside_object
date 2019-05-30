@@ -103,6 +103,7 @@ OptimizationA ProgramerPerspective()
 
 //  return OptimizationA(1, 2);
     //  linux上如果关闭开优化选项的话，上面三行的代码效率是一样的
+    // g++ -fno-elide-constructors 关闭优化选项
 //  result:
 //    compiler:1 level:2 call ctor
 //    compiler:2 level:3 call copy ctor
