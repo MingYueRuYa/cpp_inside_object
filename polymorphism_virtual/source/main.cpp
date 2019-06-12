@@ -354,8 +354,10 @@ int main(int argc, char *argv[])
     // virtual_fun_table::test_virtual_fun_address();
     // virtual_fun_table::test_manual_call_virtual_fun();
     // virtual_fun_table::test_call_virtual_fun();
-    // virtual_fun_table::test_multi_inhert_virtual_fun();
+    virtual_fun_table::test_multi_inhert_virtual_fun();
     // virtual_fun_table::test_memset_virtual_fun();
+    // virtual_fun_table::test_normal_virtual_function_call();
+    // virtual_fun_table::test_abstract_virtual_fun();
 
 #ifdef _MSC_VER
 	system("pause");
