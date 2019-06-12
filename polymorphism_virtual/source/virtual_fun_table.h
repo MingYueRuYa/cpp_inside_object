@@ -20,6 +20,8 @@ namespace virtual_fun_table
 {
 
 typedef void (*Fun)();
+typedef void (*DctorFun)(int);
+
 
 class Base 
 {
@@ -28,28 +30,35 @@ public:
     virtual void f() { cout << "Base::f()" << endl; }
     virtual void g() { cout << "Base::g()" << endl; }
     virtual void h() { cout << "Base::h()" << endl; }
-    // virtual ~Base() { cout << "~Base" << endl; }
-    // TODO:在虚表位置中如何手动调用虚析构函数?
+    virtual ~Base()  { cout << "~Base" << endl; }
 };
 
 class BaseOne
 {
 public:
-    int m_a = 0;
+    int m_b = 0;
     virtual void i() { cout << "BaseOne::i()" << endl; }
     virtual void j() { cout << "BaseOne::j()" << endl; }
     virtual void k() { cout << "BaseOne::k()" << endl; }
+    virtual ~BaseOne() { std::cout << "~BaseOne" << endl; }
 };
 
 class Derive : public Base
 {
+public:
+    int m_d = 0;
     virtual void g() { cout << "Derive::g()" << endl; }
+    virtual ~Derive() { cout << "~Derive" << endl; }
 };
 
 class MultiDerive: public BaseOne, public Base
 {
+public:
+    int m_e = 0;
     virtual void h() { cout << "MultiDerive::h()" << endl; }
     virtual void k() { cout << "MultiDerive::k()" << endl; }
+    virtual void m() { cout << "MultiDerive::m()" << endl; }
+    // virtual ~MultiDerive() { cout << "~MultiDerive" << endl; }
 };
 
 void test_virtual_fun_address()
@@ -107,8 +116,6 @@ void test_manual_call_virtual_fun()
     // Base::h()
 
     // 函数在虚表中的顺序是按照声明的顺序来的，最后一个虚表为0表示结束符
-
-    //TODO 析构代码函数需要调研
 }
 
 void test_call_virtual_fun()
@@ -134,6 +141,7 @@ void test_call_virtual_fun()
     Derive *d1 = new Derive();
     Derive *d2 = new Derive();
 
+    MultiDerive *md1 = new MultiDerive();
 
     // 2.一个类中包括虚函数，那么就会生成一个虚函数表。同一个类共用一个虚函数表，
     // 类似static成员变量
@@ -149,9 +157,28 @@ void test_multi_inhert_virtual_fun()
 {
     MultiDerive multiderive;
 
-    long *pbase_tablepoint      = (long *)(&multiderive);
-    long *base_table_address    = (long *)*(pbase_tablepoint);
+    // 从对象的首地址4个字节，获取vptr的地址
+    long *pbaseone_tablepoint      = (long *)(&multiderive);
+	// 对vptr指针解引用操作获取vtable的地址
+    long *baseone_table_address    = (long *)*(pbaseone_tablepoint);
     
+    for(int i = 0; i < 4; ++i) {
+        cout << std::hex << "0x" << baseone_table_address[i] << endl;
+    }
+
+    ((Fun)(baseone_table_address[0]))();
+    ((Fun)(baseone_table_address[1]))();
+    ((Fun)(baseone_table_address[2]))();
+    /*
+    BaseOne::i()
+    BaseOne::j()
+    MultiDerive::k()
+    */
+
+    // 获取第二个虚函数表指针的位置，从基址开始的地址+第一个继承对象的大小
+    long *pbase_tablepoint = 
+        (long *)(reinterpret_cast<char *>(pbaseone_tablepoint)+sizeof(BaseOne));
+    long *base_table_address = (long *)(*pbase_tablepoint);
     for(int i = 0; i < 4; ++i) {
         cout << std::hex << "0x" << base_table_address[i] << endl;
     }
@@ -160,18 +187,11 @@ void test_multi_inhert_virtual_fun()
     ((Fun)(base_table_address[1]))();
     ((Fun)(base_table_address[2]))();
 
-    // 获取第二个虚函数指针的位置，从基址开始的地址+第一个继承对象的大小
-    long *pbaseone_tablepoint = 
-        (long *)(reinterpret_cast<char *>(pbase_tablepoint)+sizeof(Base));
-    long *baseone_table_address = (long *)(*pbaseone_tablepoint);
-    for(int i = 0; i < 4; ++i) {
-        cout << std::hex << "0x" << baseone_table_address[i] << endl;
-    }
-
-    ((Fun)(baseone_table_address[0]))();
-    ((Fun)(baseone_table_address[1]))();
-    ((Fun)(baseone_table_address[2]))();
-
+    /*
+    Base::f()
+    Base::g()
+    MultiDerive::h()
+    */
 }
 
 class MemsetObj {
@@ -232,6 +252,64 @@ void test_memset_virtual_fun()
 // 010B9B38  cmp         esi,esp  
 // 010B9B3A  call        __RTC_CheckEsp (010B147Eh) 
     delete pobj;
+}
+
+void test_normal_virtual_function_call()
+{
+//    MultiDerive multiderive;
+//    multiderive.m();
+//
+//    MultiDerive *multiderive2 = new MultiDerive();
+//    multiderive2->m();
+//
+//    Base base;
+//    base.~Base();
+
+    Base base;
+    base.~Base();
+    long *vptr      = (long *)(&base);
+    long *vftable   = (long *)(*vptr);
+    ((Fun)(vftable[0]))();
+    ((Fun)(vftable[1]))();
+    ((Fun)(vftable[2]))();
+    ((DctorFun)(vftable[3]))(0);
+
+    Base *pbase = new Base();
+    delete pbase;
+
+    Base *basearray = new Base[10];
+    delete [] basearray;
+
+}
+
+// #define test_call_abstract_virtual_fun 1
+
+class AbstractBase
+{
+public:
+#ifdef test_call_abstract_virtual_fun
+    AbstractBase()      { CallAbsFunc(); }
+    void CallAbsFunc()  { AbsFunc(); }
+#else
+    AbstractBase()      { }
+#endif // test_call_abstract_virtual_fun
+    virtual void AbsFunc()  = 0;
+    virtual void AbsFunc2() = 0;
+};
+
+class Child : public AbstractBase
+{
+public:
+    Child()         { AbsFunc(); }
+    void AbsFunc()  { cout << "" << endl; }
+    void AbsFunc2() { cout << "" << endl; }
+};
+
+void test_abstract_virtual_fun()
+{
+    // 因为抽象类不能直接实例化，通过子类实例化，反汇编找到AbstractBase找到构造函数
+    AbstractBase *child = new Child();
+    child->AbsFunc();
 }
 
 }
