@@ -44,6 +44,23 @@ public:
     virtual void m() { cout << "MultiDerive::m()" << endl; }
 };
 
+class AbstractBase
+{
+public:
+    AbstractBase()      { CallAbsFunc(); }
+    void CallAbsFunc()  { AbsFunc(); }
+    virtual void AbsFunc() = 0;
+    virtual void AbsFunc2() = 0;
+};
+
+class Child : public AbstractBase
+{
+public:
+    Child() { AbsFunc(); }
+    void AbsFunc() { cout << "" << endl; }
+    void AbsFunc2() { cout << "" << endl; }
+};
+
 int analyse_by_tools_main()
 {	
 	//多重继承
