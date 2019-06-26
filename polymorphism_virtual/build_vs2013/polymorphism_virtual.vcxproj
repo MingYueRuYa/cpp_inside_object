@@ -11,12 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\analysis_virtual_by_tools.cpp" />
     <ClCompile Include="..\source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\analysis_adjust_this.h" />
     <ClInclude Include="..\source\compiler_optimization.h" />
+    <ClInclude Include="..\source\data_semantics.h" />
     <ClInclude Include="..\source\default_constructor.cpp" />
+    <ClInclude Include="..\source\function_semantic.h" />
     <ClInclude Include="..\source\initialization_list.h" />
     <ClInclude Include="..\source\objsize.h" />
     <ClInclude Include="..\source\virtual_fun_table.h" />

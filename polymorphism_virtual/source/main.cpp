@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "objsize.h"
+#include "data_semantics.h"
+#include "function_semantic.h"
 #include "virtual_fun_table.h"
 #include "analysis_adjust_this.h"
 #include "default_constructor.cpp"
@@ -354,10 +356,22 @@ int main(int argc, char *argv[])
     // virtual_fun_table::test_virtual_fun_address();
     // virtual_fun_table::test_manual_call_virtual_fun();
     // virtual_fun_table::test_call_virtual_fun();
-    virtual_fun_table::test_multi_inhert_virtual_fun();
+    // virtual_fun_table::test_multi_inhert_virtual_fun();
     // virtual_fun_table::test_memset_virtual_fun();
     // virtual_fun_table::test_normal_virtual_function_call();
     // virtual_fun_table::test_abstract_virtual_fun();
+
+    // data_semantics::test_data_analyse(); 
+    // data_semantics::test_class_member_address();
+    // data_semantics::test_inherit_class_member_layout();
+    // data_semantics::test_virtual_base_table();
+    // data_semantics::test_member_point();
+
+    // function_semantic::test_normal_call();
+    // function_semantic::test_virtual_static_call();
+    // function_semantic::test_complie_runtime_bind();
+    // function_semantic::test_multi_virtual_base_dtor();
+    function_semantic::test_rtti();
 
 #ifdef _MSC_VER
 	system("pause");
