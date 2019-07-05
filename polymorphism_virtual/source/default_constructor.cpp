@@ -151,6 +151,13 @@ public:
 
 };
 
+// 没有析构函数的类
+class NoDctorClass
+{
+public:
+    int m_a;
+};
+
 void test_compiler_generator_def_ctor()
 {
 	//用dumpbin把.obj文件内容导出成可查看文件my.txt，
@@ -189,6 +196,17 @@ void test_compiler_generator_def_copy_ctor()
 
 	MatrixA	mb = ma;
 	// 编译器合成默认copy ctor时机和ctor是一样的
+}
+
+// 测试编译器合成析构函数
+void test_compiler_geneator_def_dctor()
+{
+    NoDctorClass no_dctor_class;
+    // 调用构造函数
+    // no_dctor_class.NoDctorClass::NoDctorClass();
+    // 调用析构函数
+    no_dctor_class.~NoDctorClass();
+    no_dctor_class.m_a = 0;
 }
 
 }
