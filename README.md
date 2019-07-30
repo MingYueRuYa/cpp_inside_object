@@ -1,5 +1,4 @@
-对C++对象模型探究的学习代码 
-
+<h1>对C++对象模型探究的学习代码 <h1>
 polymorphism_virtual 
 
     build_linux 
@@ -19,5 +18,17 @@ polymorphism_virtual
         // 在vs下使用dumpbin 查看coff文件 
         objanalyze.h 
         // 测试影响对象的大小因素 
-        objsize.h 
+        objsize.h
+        // 使用工具分析虚函数
+        analysis_virtual_by_tools.cpp
+        // 数据语义
+        data_semantics.h
+        // 函数语义
+        function_semantic.h
+        // 初始化列表
+        initialization_list.h
+        // 数据成员布局
+        member_layout.cpp
+        // 虚函数探讨
+        virtual_fun_table.h
     README.md
