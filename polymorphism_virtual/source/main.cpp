@@ -335,6 +335,7 @@ void test_memeber_layout()
 
 int main(int argc, char *argv[])
 {
+
 	//print_address();
 
 	//test_vtbl_address();
@@ -349,6 +350,7 @@ int main(int argc, char *argv[])
 
 	// defualt_constructor::test_compiler_generator_def_ctor();
 	// defualt_constructor::test_compiler_generator_def_copy_ctor();
+    // defualt_constructor::test_compiler_geneator_def_dctor();
 
 	// compiler_optimization::test_compiler_optimization();
 	// compiler_optimization::test_initialization();
@@ -366,6 +368,10 @@ int main(int argc, char *argv[])
     // data_semantics::test_inherit_class_member_layout();
     // data_semantics::test_virtual_base_table();
     // data_semantics::test_member_point();
+    // data_semantics::test_member_layout();
+    // data_semantics::test_call_member();
+    // data_semantics::test_member_initialize();
+    // data_semantics::test_member_effective();
 
     // function_semantic::test_normal_call();
     // function_semantic::test_virtual_static_call();

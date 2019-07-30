@@ -216,6 +216,7 @@ class Grand
 public:
     int G1;
     int G11;
+    virtual ~Grand() {}
 };
 
 class Grand2
@@ -225,7 +226,7 @@ public:
     int G22;
 };
 
-class Parent1 : virtual public Grand, virtual public Grand2
+class Parent1 : virtual public Grand//, virtual public Grand2
 {
 public:
     int P1;
@@ -241,20 +242,24 @@ class Child3: public Parent1, public Parent2
 {
 public:
     int C3;
+	static int s_Age;
 };
+
+int Child3::s_Age = -1;
 
 void test_virtual_base_table()
 {
-    Parent1 p1;
-    p1.G1 = 0;
-    p1.P1 = 1;
-
+//    Parent1 p1;
+//    p1.G1 = 0;
+//    p1.P1 = 1;
+//
     Child3 c3;
     c3.G1 = 0;
+    c3.G11 = 11;
     c3.P1 = 1;
     c3.P2 = 2;
     c3.C3 = 3;
-    c3.G2 = 4;
+    // c3.G2 = 4;
     
     // c3 --> vbptr --> vftable
     // vftable中包含两类，0-3字节表示当前虚表的位置距离当前对象首地址的距离
@@ -265,6 +270,17 @@ void test_virtual_base_table()
     // 当虚继承遇到虚函数时，虚表指针还是位于首地址的前4个字节，紧接着就是虚基表指针位置
     // 此时虚基表的前四个字节就会为0xfffffffc(-4)，距离首地址的偏移地址为-4
 
+}
+
+void test_call_member()
+{
+	Child3::s_Age = 0;
+
+	Child3 c3;
+	c3.s_Age = 1;
+	
+	Child3 *pc3 = new Child3();
+	pc3->s_Age = 2;
 }
 
 void Func(int Child3::*mempoint, Child3 &C3)
@@ -285,6 +301,145 @@ void test_member_point()
     mempoint = nullptr;
 
 }
+
+extern float x;
+
+class Point3D
+{
+private:
+    float x, y, z;	
+public:
+    Point3D(float, float, float);
+    
+    float X() { return x; }
+    void X(float new_x) { x = new_x; }
+};
+
+class Base
+{
+public:
+    int m_base_a;
+    int m_base_b;
+    virtual ~Base() {}
+};
+
+class Base3
+{
+public:
+    int m_base3_a;
+    int m_base3_b;
+};
+
+class Child : public Base, public Base3
+{
+public:
+    int m_a;
+    int m_b;
+    int m_c;
+    int m_d;
+    int m_e;
+};
+
+
+
+void test_member_layout()
+{
+    Child child;
+
+    printf("vptr = 0x%p\n", (long *)&child);
+    printf("m_base_a = 0x%p\n", &child.m_base_a);
+    printf("m_basse_b = 0x%p\n", &child.m_base_b);
+    printf("m_base3_a = 0x%p\n", &child.m_base3_a);
+    printf("m_basse3_b = 0x%p\n", &child.m_base3_b);
+    printf("m_a = 0x%p\n", &child.m_a);
+    printf("m_b = 0x%p\n", &child.m_b);
+    printf("m_c = 0x%p\n", &child.m_c);
+    printf("m_d = 0x%p\n", &child.m_d);
+    printf("m_e = 0x%p\n", &child.m_e);
+
+
+ 
+}
+
+
+class Child4
+{
+public:
+    int m1;
+    int m2;
+    int m3;
+    int m4;
+};
+
+void test_member_initialize()
+{
+	
+    Child4 *c5 = new Child4();
+    c5->m1 = 0;
+    c5->m2 = 1;
+    c5->m3 = 2;
+    c5->m4 = 3;
+	
+    Child4 c4;
+    c4.m1 = 0;
+    c4.m2 = 1;
+    c4.m3 = 2;
+    c4.m4 = 3;
+
+}
+
+class Base6
+{
+public:
+    int m_base6_a;
+    virtual ~Base6() {}
+    static int s_base6_b;
+};
+int Base6::s_base6_b = 0;
+
+class Base4 : virtual public Base6
+{
+public:
+    int m_base4_a;
+    int m_base4_b;
+    static int s_base4_c;
+    virtual ~Base4() {}
+};
+int Base4::s_base4_c = 0;
+
+class Base5 : virtual public Base6
+{
+public:
+    int m_base5_a;
+    int m_base5_b;
+    static int s_base5_c;
+    virtual ~Base5() {}
+};
+int Base5::s_base5_c = 0;
+
+class Child5 : public Base4, public Base5
+{
+public:
+    int m_a;
+    int m_b;
+    int m_c;
+    int m_d;
+    int m_e;
+};
+
+void test_member_effective()
+{
+    Child5::s_base6_b = 10;
+    Child5::s_base4_c = 1;
+    Child5::s_base5_c = 2;
+
+    Child5 c5;
+    c5.m_a = 3;
+    c5.m_base4_a = 4;
+    c5.m_base5_a = 5;
+    c5.m_base6_a = 6;
+}
+
 
 };
 

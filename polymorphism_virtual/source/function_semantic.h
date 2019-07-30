@@ -21,7 +21,7 @@ class NormalCall
 public:
     void Add(int number)
     {
-        number+m_add;
+        m_add = number + 1;
     }
 
     static void ClassStatic()
@@ -35,7 +35,7 @@ public:
     }
 
 public:
-    int m_add;
+    int m_add = 0;
 };
 
 void Add(NormalCall *nc, int number)
@@ -92,8 +92,8 @@ void test_virtual_static_call()
     // 4.可以将静态的成员函数在某些环境下当做回调函数使用
 
     ((NormalCall *)0)->ClassStatic();
-    // 这段代码在VS2013下测试没有崩溃，通过寄存器来看ecx为0，但是也没有崩溃
-    ((NormalCall *)0)->Add(1);
+    //  崩溃
+    // ((NormalCall *)0)->Add(1);
 
 }
 
@@ -241,7 +241,7 @@ void test_multi_virtual_base_dtor()
 void test_rtti()
 {
     // 1.C++中的RTTI运行时类型识别，要求父类必须至少有一个虚函数，否则RTTI就不准确
-    // RTTI就可以在执行难期间查询一个多态指针，或者多态引用的信息
+    // RTTI就可以在执行期间查询一个多态指针，或者多态引用的信息
     // RTTI能力靠typeid和dynamic_cast运算符来实现
     Base *pbase = new Child3();
     Child3 c3;

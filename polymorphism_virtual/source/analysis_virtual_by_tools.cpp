@@ -61,7 +61,59 @@ public:
     void AbsFunc2() { cout << "" << endl; }
 };
 
-int analyse_by_tools_main()
+
+class Base7
+{
+public:
+    void MemberFunction() { cout << "Base function" << endl; }
+    virtual void VirtualFun(int age = 1) 
+    { cout << "Base age = " << age << endl; }
+	virtual ~Base7() {}
+};
+
+//class Child : public Base
+//{
+//public:
+//    void MemberFunction() { cout << "Child function" << endl; }
+//    virtual void VirtualFun(int age = 2) 
+//    { cout << "Child age = " << age << endl; }
+//};
+
+class Child2 : public Base
+{
+public:
+    void MemberFunction() { cout << "Child2 function" << endl; }
+    virtual void VirtualFun(int age = 3) { cout << "age = " << age << endl; }
+};
+
+class Parent
+{
+public:
+    virtual void ParFun() { cout << "parent function" << endl; }
+	virtual ~Parent() {}
+
+public:
+    int mParent;
+};
+
+class Child3 : public Base7
+{
+public:    
+	void ParFun() { cout << "Child3" << endl; }
+	virtual void VirChild3() {}
+	void Child3SeflFun() 
+	{ 
+		// 间接调用，是通过虚表查找找虚函数的地址
+		// VirChild3(); 
+		// 通过这种方式是直接调用
+		Child3::VirChild3();
+        cout << "child3 self fun" << endl;
+	}
+    int mChild3;
+};
+
+int analysis_virtual_by_tools_main()
+// int main()
 {	
 	//多重继承
 //	cout << sizeof(BaseOne) << endl;
