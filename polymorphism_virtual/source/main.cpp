@@ -377,7 +377,12 @@ int main(int argc, char *argv[])
     // function_semantic::test_virtual_static_call();
     // function_semantic::test_complie_runtime_bind();
     // function_semantic::test_multi_virtual_base_dtor();
-    function_semantic::test_rtti();
+    // function_semantic::test_rtti();
+    // function_semantic::test_multi_inherit();
+    // function_semantic::test_function_pointer();
+    // function_semantic::test_virtual_fucntion_pointer();
+    // function_semantic::test_mult_inherit_vir_fun_pointer();
+    function_semantic::test_virtual_mult_inherit_vir_fun_pointer();
 
 #ifdef _MSC_VER
 	system("pause");

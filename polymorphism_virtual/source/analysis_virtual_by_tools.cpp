@@ -112,8 +112,81 @@ public:
     int mChild3;
 };
 
-int analysis_virtual_by_tools_main()
-// int main()
+
+class CloneBase1
+{
+public:
+    CloneBase1() { cout << "CloneBase1" << endl; }
+    virtual ~CloneBase1() {}
+    virtual CloneBase1 *clone() { return new CloneBase1(); }
+
+};
+
+class CloneBase2
+{
+public:
+    CloneBase2() { cout << "CloneBase2" << endl; }
+    virtual ~CloneBase2() {}
+    virtual CloneBase2 *clone() { return new CloneBase2(); }
+};
+
+class CloneChild : public CloneBase1, public CloneBase2
+{
+public:
+    CloneChild() { cout << "CloneChild" << endl; }
+    virtual ~CloneChild() {}
+    virtual CloneChild *clone() { return new CloneChild(); }
+};
+
+void test_multi_inherit()
+{
+    CloneBase1 *base1 = new CloneChild();
+    base1->clone();
+    cout << "--------------------------" << endl; 
+
+    CloneBase2 *base2 = new CloneChild();
+    base2->clone();
+	delete base2;
+    cout << "--------------------------" << endl; 
+
+    CloneChild *child = new CloneChild();
+    child->clone();
+    cout << "--------------------------" << endl; 
+}
+
+class Animal
+{
+public:
+    virtual ~Animal() { cout << "~Animal" << endl; }
+    virtual void Name() { cout << "Animal" << endl; }
+    void Size() { cout << "Animal Size" << endl; }
+};
+
+class BigTiger: public virtual Animal
+{
+public:
+    virtual ~BigTiger() { cout << "~Big Tiger" << endl; }
+    virtual void Name() { cout << "Big Tiger" << endl; }
+};
+
+class FatTiger: public virtual Animal
+{
+public:
+    virtual ~FatTiger() { cout << "~Fat Tiger" << endl; }
+    virtual void Name() { cout << "Fat Tiger" << endl; }
+};
+
+class Tiger: public  BigTiger, public  FatTiger
+{
+public:
+    virtual ~Tiger() { cout << "~Tiger" << endl; }
+    virtual void Name() { cout << "Tiger" << endl; }
+    virtual void CanFly() { cout << "Tiger Fly" << endl; }
+};
+
+
+// int analysis_virtual_by_tools_main()
+int main()
 {	
 	//多重继承
 //	cout << sizeof(BaseOne) << endl;
@@ -138,3 +211,49 @@ int analysis_virtual_by_tools_main()
 
 	return 1;
 }
+
+
+inline int max(int left, int right)
+{
+	return left > right ? left : right;
+}
+
+
+max(foo(), bar()+1)
+
+// inline 被扩展之后
+int t1;
+int t2;
+
+maxvale = (t1=foo()),(t2=bar()+1), t1 > t2 ? t1 : t2;
+
+
+
+inline int max(int left, int right)
+{
+	int max_value = left > right ? left : right;
+	return max_value;
+}
+
+{
+	int local_var;
+	int maxval;
+	maxval = max(left, right);
+}
+
+// inline 被扩展之后
+// max里面的max_value会被mangling，现在假设为__max_maxval
+int __max_maxval;
+maxval = (__max_maxval = left > right ? left : right), __max_maxval;
+
+
+
+
+
+
+
+
+
+
+
+

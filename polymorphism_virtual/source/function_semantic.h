@@ -298,6 +298,200 @@ void test_rtti()
 
 }
 
+class CloneBase1
+{
+public:
+    CloneBase1() { cout << "CloneBase1" << endl; }
+    virtual ~CloneBase1() {}
+    virtual CloneBase1 *clone() { return new CloneBase1(); }
+
+};
+
+class CloneBase2
+{
+public:
+    CloneBase2() { cout << "CloneBase2" << endl; }
+    virtual ~CloneBase2() {}
+    virtual CloneBase2 *clone() { return new CloneBase2(); }
+};
+
+class CloneChild : public CloneBase1, public CloneBase2
+{
+public:
+    CloneChild() { cout << "CloneChild" << endl; }
+    virtual ~CloneChild() {}
+    virtual CloneChild *clone() { return new CloneChild(); }
+};
+
+void test_multi_inherit()
+{
+    CloneBase1 *base1 = new CloneChild();
+    base1->clone();
+    cout << "--------------------------" << endl; 
+
+    CloneBase2 *base2 = new CloneChild();
+    base2->clone();
+	delete base2;
+    cout << "--------------------------" << endl; 
+
+    CloneChild *child = new CloneChild();
+    child->clone();
+    cout << "--------------------------" << endl; 
+}
+
+class Car
+{
+public:
+    void Run() { cout << "Car run" << endl; }
+    static void Name() { cout << "lexus" << endl; }
+};
+
+void test_function_pointer()
+{
+    // void (Car::*fRun)() = &Car::Run;
+
+    // 可以将成员函数指针分成四步看
+    void        // 1.返回值
+    (Car::*     // 2.哪个类的成员函数指针
+    fRun)       // 3.函数指针名称
+    ()          // 4.参数列表
+    = &Car::Run;
+
+    Car car;
+    (car.*fRun)();
+
+    void (*fName)() = &Car::Name;
+    fName();
+}
+
+class Animal
+{
+public:
+    virtual ~Animal() { cout << "~Animal" << endl; }
+    virtual void Name() { cout << "Animal" << endl; }
+    void Size() { cout << "Animal Size" << endl; }
+};
+
+class Fly
+{
+public:
+    virtual ~Fly() { cout << "~Fly" << endl; }
+    virtual void CanFly() { cout << "Fly" << endl; }
+    void Distance() { cout << "Fly distance" << endl; }
+};
+
+class Cat : public Animal
+{
+public:
+    virtual ~Cat() { cout << "~Cat" << endl; }
+    virtual void Name() { cout << "Cat Cat" << endl; }
+};
+
+class Dog : public Animal
+{
+public:
+    virtual ~Dog() { cout << "~Dog" << endl; }
+    virtual void Run() { cout << "Dog Run" << endl; }
+    virtual void Name() { cout << "Dog Dog" << endl; }
+};
+
+class Fish : public Animal, public Fly
+{
+public:
+    virtual ~Fish() { cout << "~Fish" << endl; }
+    virtual void Name() { cout << "Fish" << endl; }
+    virtual void CanFly() { cout << "Fish Fly" << endl; }
+};
+
+void test_virtual_fucntion_pointer()
+{
+    Animal *animal = new Cat();
+    void (Animal::*fName)() = &Animal::Name;
+    printf("fName address %p\n", fName);
+    // fName address 009F1802
+    (animal->*fName)();
+    // Cat Cat
+
+    // 打印Cat的虚表中的Name地址
+    Cat *cat = new Cat();
+    long *vtable_address = (long *)(*((long *)(cat)));
+    printf("virtual Name address %p\n", (long *)vtable_address[1]);
+    // virtual Name address 009F1429
+
+    // 编译器在语法层面阻止我们获取析构函数地址
+    // 但是我们知道的在虚函数章节里面，我们可以通过虚表的地址间接获取析构函数地址
+    // void (Animal::*Dtor)() = &Animal::~Animal;
+    // (animal->*Dtor)();
+
+    printf("fName address %p\n", fName);
+    // fName address 00CA1802
+    animal = new Dog();
+    (animal->*fName)();
+    // Dog Dog
+
+    // 打印Dog的虚表中的Name地址
+    Dog *dog = new Dog();
+    long *dog_vtable_address = (long *)(*((long *)(dog)));
+    printf("virtual Name address %p\n", (long *)dog_vtable_address[1]);
+    // virtual Name address 009F1672
+}
+
+void test_mult_inherit_vir_fun_pointer()
+{
+    void (Animal::*fName)() = &Animal::Name;
+    
+    void (Fly::*fFly)() = &Fly::CanFly;
+    Fish *fish = new Fish();
+    Fly *fishfly = fish; 
+    (fishfly->*fFly)();
+
+    Animal *animal = fish;
+    (animal->*fName)();
+}
+
+class BigTiger: public virtual Animal
+{
+public:
+    virtual ~BigTiger() { cout << "~Big Tiger" << endl; }
+    virtual void Name() { cout << "Big Tiger" << endl; }
+};
+
+class FatTiger: public virtual Animal
+{
+public:
+    virtual ~FatTiger() { cout << "~Fat Tiger" << endl; }
+    virtual void Name() { cout << "Fat Tiger" << endl; }
+};
+
+class Tiger: public BigTiger, public FatTiger
+{
+public:
+    virtual ~Tiger() { cout << "~Tiger" << endl; }
+    virtual void Name() { cout << "Tiger" << endl; }
+    virtual void CanFly() { cout << "Tiger Fly" << endl; }
+};
+
+void test_virtual_mult_inherit_vir_fun_pointer()
+{
+    BigTiger *bigtiger2 = new BigTiger();
+
+    // void (Animal::*fName)() = &Animal::Name;
+    // 下面这句和上面注释的一句是等价的
+    // 1.测试代码
+    void (BigTiger::*fName)() = &Animal::Name;
+    Tiger *temptiger2   = new Tiger();
+    BigTiger *bigtiger  = temptiger2;
+    (bigtiger->*fName)();
+
+    // void (FatTiger::*fFatName)() = &Animal::Name;
+    // 下面这句和上面注释的一句是等价的
+    // 2.测试代码
+    void (FatTiger::*fFatName)() = &FatTiger::Name;
+    Tiger *temptiger = new Tiger();
+    FatTiger *fattiger = temptiger;
+    (fattiger->*fFatName)();
+}
+
 }
 
 #endif // function_semantic_h

@@ -288,17 +288,57 @@ void Func(int Child3::*mempoint, Child3 &C3)
     C3.*mempoint = 100; 
 }
 
+class Class7
+{
+public:
+    Class7() {
+        m_a = 0;
+        m_b = 0;
+        m_c = 0;
+        m_d = 0;
+    }
+
+    virtual void VirFunc() {}
+
+    int m_a;
+    int m_b;
+    int m_c;
+    int m_d;
+};
+
 void test_member_point()
 {
+    printf("&Class7::m_a:%x\n", &Class7::m_a);
+    printf("&Class7::m_b:%x\n", &Class7::m_b);
+    printf("&Class7::m_c:%x\n", &Class7::m_c);
+    printf("&Class7::m_d:%x\n", &Class7::m_d);
+    // &Class7::m_a:4
+    // &Class7::m_b:8
+    // &Class7::m_c:c
+    // &Class7::m_d:10
+
+	// ÓÃ·¨
+    int Class7::*cpoint = &Class7::m_a;
+    Class7 c7;
+    c7.*cpoint = 1; 
+    // *(&c7+cpoint) = 1;
+
+
     int Child3::*cpoint3 = &Child3::C3;
-    
 
     Child3 c3;
     Func(cpoint3, c3);
 
     int Child3::*mempoint = 0;
 
-    mempoint = nullptr;
+    // mempoint = nullptr;
+
+    if (0 == mempoint) {
+        int i = 0;
+        cout << "eqaul" << endl; 
+    } else {
+        cout << "not eqaul" << endl; 
+    }
 
 }
 
