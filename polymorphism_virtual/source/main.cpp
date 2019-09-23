@@ -8,6 +8,7 @@
 #include "analysis_adjust_this.h"
 #include "default_constructor.cpp"
 #include "compiler_optimization.h"
+#include "ctor_dctor_copy_semantic.h"
 
 using std::cout;
 using std::endl;
@@ -333,8 +334,54 @@ void test_memeber_layout()
 }
 #endif // _MSC_VER
 
+
+class Animal
+{
+public:
+    Animal() 
+    {
+        int i = 0;
+    }
+};
+
+class Dog : virtual public Animal
+{
+public:    
+    Dog() { 
+        int i = 0; 
+    }
+};
+
+class Cat : virtual public Animal
+{
+public:    
+    Cat() {
+        int i = 0; 
+    }
+};
+
+class DogCat : public Dog, public Cat
+{
+public:
+    DogCat() { 
+        int i = 0; 
+    }
+};
+
+void fun()
+{
+    Dog dog;
+
+    DogCat dogCat;
+}
+
+#include <vector>
+
+using std::vector;
+
 int main(int argc, char *argv[])
 {
+    fun();
 
 	//print_address();
 
@@ -382,10 +429,16 @@ int main(int argc, char *argv[])
     // function_semantic::test_function_pointer();
     // function_semantic::test_virtual_fucntion_pointer();
     // function_semantic::test_mult_inherit_vir_fun_pointer();
-    function_semantic::test_virtual_mult_inherit_vir_fun_pointer();
+    // function_semantic::test_virtual_mult_inherit_vir_fun_pointer();
+
+    object_ctor_dtor_copy_semantic::test_pod_type();
+    // cout << "------------start main------------" << endl;
+    // object_ctor_dtor_copy_semantic::test_obj_ctor();
+    // cout << "------------end main------------" << endl;
+    // object_ctor_dtor_copy_semantic::test_virtual_inherit_ctor();
 
 #ifdef _MSC_VER
-	system("pause");
+	// system("pause");
 #endif //_MSC_VER
 	return 0;
 }

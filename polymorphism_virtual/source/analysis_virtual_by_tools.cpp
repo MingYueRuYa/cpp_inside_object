@@ -247,6 +247,58 @@ int __max_maxval;
 maxval = (__max_maxval = left > right ? left : right), __max_maxval;
 
 
+class Point
+{
+public:
+    Point() : mX(1), mY(2) { cout << "point" << endl; }
+    virtual ~Point() { cout << "~point" << endl; }
+protected:
+    int mX,mY;
+};
+
+class Point3D : public virtual Point
+{
+public:    
+    Point3D() : mZ(3) { cout << "point3d" << endl; }
+    virtual ~Point3D() { cout << "~point3d" << endl; }
+	virtual void VirFun1() { cout << "~VirFun1" << endl; }
+	
+protected:
+    int mZ;
+};
+
+class Vertex : public virtual Point
+{
+public:
+    Vertex() : mAngle(4) { cout << "vertex" << endl; }
+    virtual ~Vertex() { cout << "~vertex" << endl; }
+	virtual void VirFun2() { cout << "~VirFun2" << endl; }
+	
+protected:
+    int mAngle;
+
+};
+
+class Vertex3D : public Point3D, public Vertex
+{
+public:
+    Vertex3D() { cout << "vertex3D" << endl; }
+    virtual ~Vertex3D() { cout << "~vertex3D" << endl; }
+	virtual void VirFun3() { cout << "~VirFun3" << endl; }
+};
+
+class PVertex : public Vertex3D
+{
+public:
+    PVertex() : mCount(5) { cout << "PVertex3D" << endl; }
+    virtual ~PVertex() { cout << "~PVertex3D" << endl; }
+	virtual void VirFun4() { cout << "~VirFun4" << endl; }
+
+protected:
+    int mCount;
+};
+
+
 
 
 

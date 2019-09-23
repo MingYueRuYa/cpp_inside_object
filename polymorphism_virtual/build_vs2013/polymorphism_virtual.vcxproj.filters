@@ -38,5 +38,8 @@
     <ClInclude Include="..\source\function_semantic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\ctor_dctor_copy_semantic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
