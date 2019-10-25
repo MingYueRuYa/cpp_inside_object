@@ -22,6 +22,8 @@
     <ClInclude Include="..\source\function_semantic.h" />
     <ClInclude Include="..\source\initialization_list.h" />
     <ClInclude Include="..\source\objsize.h" />
+    <ClInclude Include="..\source\static_local_obj.h" />
+    <ClInclude Include="..\source\temporary_object.h" />
     <ClInclude Include="..\source\virtual_fun_table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -72,6 +74,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions> /Zc:forScope /Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

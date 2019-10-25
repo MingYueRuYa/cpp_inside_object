@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <thread>
 
 #include "objsize.h"
 #include "data_semantics.h"
@@ -9,6 +10,8 @@
 #include "default_constructor.cpp"
 #include "compiler_optimization.h"
 #include "ctor_dctor_copy_semantic.h"
+#include "static_local_obj.h"
+#include "temporary_object.h"
 
 using std::cout;
 using std::endl;
@@ -379,6 +382,16 @@ void fun()
 
 using std::vector;
 
+class Bar
+{
+public:
+	static Bar *getInstance()
+	{
+		static Bar s_instance;
+		return &s_instance;
+	}
+};
+
 int main(int argc, char *argv[])
 {
     fun();
@@ -431,14 +444,24 @@ int main(int argc, char *argv[])
     // function_semantic::test_mult_inherit_vir_fun_pointer();
     // function_semantic::test_virtual_mult_inherit_vir_fun_pointer();
 
-    object_ctor_dtor_copy_semantic::test_pod_type();
+    // object_ctor_dtor_copy_semantic::test_pod_type();
     // cout << "------------start main------------" << endl;
     // object_ctor_dtor_copy_semantic::test_obj_ctor();
     // cout << "------------end main------------" << endl;
     // object_ctor_dtor_copy_semantic::test_virtual_inherit_ctor();
 
+    // object_ctor_dtor_copy_semantic::test_object_array_ctor_dtor();
+    // object_ctor_dtor_copy_semantic::test_object_array_ctor_dtor();
+    // object_ctor_dtor_copy_semantic::test_new_obj();
+
+
+    // static_local_obj::test_static_local_obj();
+
+    // temporary_object::test_implicit_convert();
+    temporary_object::test_ret_obj();
+
 #ifdef _MSC_VER
-	// system("pause");
+	system("pause");
 #endif //_MSC_VER
 	return 0;
 }

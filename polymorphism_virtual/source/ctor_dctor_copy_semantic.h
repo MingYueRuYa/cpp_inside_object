@@ -160,4 +160,94 @@ void test_virtual_inherit_ctor()
     // ~point
 }
 
+int g_number = 0;
+
+class ObjClass
+{
+public:
+    explicit ObjClass() : mCount(g_number++) 
+    { 
+        // cout << std::hex << this << endl; 
+        cout << std::hex << "0x" << this << " ObjClass ctor:" << mCount << endl; 
+    }
+
+    ~ObjClass() 
+    { 
+        // 这里再赋值是为了在内存更明显的观察
+        mCount = g_number++;
+        cout << std::hex << "0x" <<  this <<" ~ObjClass ctor:" << mCount << endl; 
+    }
+
+private:
+    int mCount;
+};
+
+void test_object_array_ctor_dtor()
+{
+    // ObjClass objarr[12];
+    ObjClass *objarr = new ObjClass[12];
+    // 0x001D59CC ObjClass ctor:0
+    // 0x001D59D0 ObjClass ctor:1
+    // 0x001D59D4 ObjClass ctor:2
+    // 0x001D59D8 ObjClass ctor:3
+    // 0x001D59DC ObjClass ctor:4
+    // 0x001D59E0 ObjClass ctor:5
+    // 0x001D59E4 ObjClass ctor:6
+    // 0x001D59E8 ObjClass ctor:7
+    // 0x001D59EC ObjClass ctor:8
+    // 0x001D59F0 ObjClass ctor:9
+    // 0x001D59F4 ObjClass ctor:a
+    // 0x001D59F8 ObjClass ctor:b  
+
+
+    delete[] objarr;
+    // 0x001D59F8 ~ObjClass ctor:c
+    // 0x001D59F4 ~ObjClass ctor:d
+    // 0x001D59F0 ~ObjClass ctor:e
+    // 0x001D59EC ~ObjClass ctor:f
+    // 0x001D59E8 ~ObjClass ctor:10
+    // 0x001D59E4 ~ObjClass ctor:11
+    // 0x001D59E0 ~ObjClass ctor:12
+    // 0x001D59DC ~ObjClass ctor:13
+    // 0x001D59D8 ~ObjClass ctor:14
+    // 0x001D59D4 ~ObjClass ctor:15
+    // 0x001D59D0 ~ObjClass ctor:16
+    // 0x001D59CC ~ObjClass ctor:17
+
+    // 对象数组构造伪代码
+    char *ptr = reinterpret_cast<char *>(operator new[](0x34));
+    char *tempptr = ptr;
+    if (tempptr) {
+        *(reinterpret_cast<int *>(tempptr)) = 0x0C;
+        tempptr += 4;
+        for (int i = 0; i < 12; ++i) {
+            (*(reinterpret_cast<ObjClass *>(tempptr))).ObjClass::ObjClass();
+            tempptr += 4;
+        } 
+    }
+
+    // 对象数组析构伪代码
+    char *delete_ptr = reinterpret_cast<char *>(operator new[](0x34));
+    if (delete_ptr) {
+        char *tempptr = delete_ptr;
+        // 跳过前面保存数组大小的4byte
+        tempptr += 4;
+        // 移动最后一个对象的位置
+        tempptr += 0x30; 
+        for (int i = 12; i >= 0; --i) {
+            (*(reinterpret_cast<ObjClass *>(tempptr))).ObjClass::~ObjClass();
+            tempptr -= 4;
+        }
+        
+        // 注意这里是我们自己的模拟过程，直接这样调用会造成崩溃，毕竟内存模型和真正的
+        // operatr new[]是不一样的
+        // operator delete[](delete_ptr);
+    }
+}
+
+void test_new_obj()
+{
+    ObjClass *obj = new ObjClass();
+}
+
 };

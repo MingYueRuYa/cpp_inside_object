@@ -41,5 +41,11 @@
     <ClInclude Include="..\source\ctor_dctor_copy_semantic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\static_local_obj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\temporary_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
