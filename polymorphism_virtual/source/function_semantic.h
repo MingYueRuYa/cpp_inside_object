@@ -357,6 +357,8 @@ void test_function_pointer()
     ()          // 4.参数列表
     = &Car::Run;
 
+    cout << "fRun:" << sizeof(fRun) << endl; 
+
     Car car;
     (car.*fRun)();
 

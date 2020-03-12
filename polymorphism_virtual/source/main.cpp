@@ -12,6 +12,7 @@
 #include "ctor_dctor_copy_semantic.h"
 #include "static_local_obj.h"
 #include "temporary_object.h"
+#include "exception.h"
 
 using std::cout;
 using std::endl;
@@ -390,11 +391,18 @@ public:
 		static Bar s_instance;
 		return &s_instance;
 	}
+
+    void GetName()
+    { cout << "Bar Name" << endl; }
+
+private:
+    Bar() { cout << "Bar ctor" << endl; }
+    ~Bar() {}
 };
 
 int main(int argc, char *argv[])
 {
-    fun();
+    // fun();
 
 	//print_address();
 
@@ -456,9 +464,19 @@ int main(int argc, char *argv[])
 
 
     // static_local_obj::test_static_local_obj();
+    // static_local_obj::test_static_local_obj();
+
+//    static_local_obj::static_local_obj();
+//    static_local_obj::static_local_obj();
+//
+//    static static_local_obj::Obj obj;
+//    obj.number = 1;
+    // cout << obj.number << endl;
 
     // temporary_object::test_implicit_convert();
-    temporary_object::test_ret_obj();
+    // temporary_object::test_ret_obj();
+
+    _test_exception::test_exception();
 
 #ifdef _MSC_VER
 	system("pause");

@@ -31,6 +31,8 @@ void static_local_obj()
 {
     static Obj obj;
 
+    obj.number = 1;
+
     cout << obj.number << endl; 
 }
 

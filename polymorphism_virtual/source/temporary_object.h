@@ -106,6 +106,10 @@ void test(char *str)
     //TODO something
 }
 
+void test_full_expression()
+{
+    Obj objA, objB, objC, objD;
+}
 };
 
 #endif // temporary_object_h 
