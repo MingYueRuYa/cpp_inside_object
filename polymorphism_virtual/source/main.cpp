@@ -13,6 +13,7 @@
 #include "static_local_obj.h"
 #include "temporary_object.h"
 #include "exception.h"
+#include "type_cast.h"
 
 using std::cout;
 using std::endl;
@@ -477,6 +478,9 @@ int main(int argc, char *argv[])
     // temporary_object::test_ret_obj();
 
     _test_exception::test_exception();
+
+    type_cast::test_static_cast();
+
 
 #ifdef _MSC_VER
 	system("pause");

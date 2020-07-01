@@ -47,5 +47,11 @@
     <ClInclude Include="..\source\temporary_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\type_cast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

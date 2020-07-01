@@ -19,11 +19,13 @@
     <ClInclude Include="..\source\ctor_dctor_copy_semantic.h" />
     <ClInclude Include="..\source\data_semantics.h" />
     <ClInclude Include="..\source\default_constructor.cpp" />
+    <ClInclude Include="..\source\exception.h" />
     <ClInclude Include="..\source\function_semantic.h" />
     <ClInclude Include="..\source\initialization_list.h" />
     <ClInclude Include="..\source\objsize.h" />
     <ClInclude Include="..\source\static_local_obj.h" />
     <ClInclude Include="..\source\temporary_object.h" />
+    <ClInclude Include="..\source\type_cast.h" />
     <ClInclude Include="..\source\virtual_fun_table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
