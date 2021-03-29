@@ -21,3 +21,6 @@ polymorphism_virtual
         // 测试影响对象的大小因素 
         objsize.h 
     README.md
+
+**1.0 version**
+
