@@ -61,7 +61,132 @@ public:
     void AbsFunc2() { cout << "" << endl; }
 };
 
-int analyse_by_tools_main()
+
+class Base7
+{
+public:
+    void MemberFunction() { cout << "Base function" << endl; }
+    virtual void VirtualFun(int age = 1) 
+    { cout << "Base age = " << age << endl; }
+	virtual ~Base7() {}
+};
+
+//class Child : public Base
+//{
+//public:
+//    void MemberFunction() { cout << "Child function" << endl; }
+//    virtual void VirtualFun(int age = 2) 
+//    { cout << "Child age = " << age << endl; }
+//};
+
+class Child2 : public Base
+{
+public:
+    void MemberFunction() { cout << "Child2 function" << endl; }
+    virtual void VirtualFun(int age = 3) { cout << "age = " << age << endl; }
+};
+
+class Parent
+{
+public:
+    virtual void ParFun() { cout << "parent function" << endl; }
+	virtual ~Parent() {}
+
+public:
+    int mParent;
+};
+
+class Child3 : public Base7
+{
+public:    
+	void ParFun() { cout << "Child3" << endl; }
+	virtual void VirChild3() {}
+	void Child3SeflFun() 
+	{ 
+		// 间接调用，是通过虚表查找找虚函数的地址
+		// VirChild3(); 
+		// 通过这种方式是直接调用
+		Child3::VirChild3();
+        cout << "child3 self fun" << endl;
+	}
+    int mChild3;
+};
+
+
+class CloneBase1
+{
+public:
+    CloneBase1() { cout << "CloneBase1" << endl; }
+    virtual ~CloneBase1() {}
+    virtual CloneBase1 *clone() { return new CloneBase1(); }
+
+};
+
+class CloneBase2
+{
+public:
+    CloneBase2() { cout << "CloneBase2" << endl; }
+    virtual ~CloneBase2() {}
+    virtual CloneBase2 *clone() { return new CloneBase2(); }
+};
+
+class CloneChild : public CloneBase1, public CloneBase2
+{
+public:
+    CloneChild() { cout << "CloneChild" << endl; }
+    virtual ~CloneChild() {}
+    virtual CloneChild *clone() { return new CloneChild(); }
+};
+
+void test_multi_inherit()
+{
+    CloneBase1 *base1 = new CloneChild();
+    base1->clone();
+    cout << "--------------------------" << endl; 
+
+    CloneBase2 *base2 = new CloneChild();
+    base2->clone();
+	delete base2;
+    cout << "--------------------------" << endl; 
+
+    CloneChild *child = new CloneChild();
+    child->clone();
+    cout << "--------------------------" << endl; 
+}
+
+class Animal
+{
+public:
+    virtual ~Animal() { cout << "~Animal" << endl; }
+    virtual void Name() { cout << "Animal" << endl; }
+    void Size() { cout << "Animal Size" << endl; }
+};
+
+class BigTiger: public virtual Animal
+{
+public:
+    virtual ~BigTiger() { cout << "~Big Tiger" << endl; }
+    virtual void Name() { cout << "Big Tiger" << endl; }
+};
+
+class FatTiger: public virtual Animal
+{
+public:
+    virtual ~FatTiger() { cout << "~Fat Tiger" << endl; }
+    virtual void Name() { cout << "Fat Tiger" << endl; }
+};
+
+class Tiger: public  BigTiger, public  FatTiger
+{
+public:
+    virtual ~Tiger() { cout << "~Tiger" << endl; }
+    virtual void Name() { cout << "Tiger" << endl; }
+    virtual void CanFly() { cout << "Tiger Fly" << endl; }
+};
+
+
+// int analysis_virtual_by_tools_main()
+int main()
 {	
 	//多重继承
 //	cout << sizeof(BaseOne) << endl;
@@ -86,3 +211,101 @@ int analyse_by_tools_main()
 
 	return 1;
 }
+
+
+inline int max(int left, int right)
+{
+	return left > right ? left : right;
+}
+
+
+max(foo(), bar()+1)
+
+// inline 被扩展之后
+int t1;
+int t2;
+
+maxvale = (t1=foo()),(t2=bar()+1), t1 > t2 ? t1 : t2;
+
+
+
+inline int max(int left, int right)
+{
+	int max_value = left > right ? left : right;
+	return max_value;
+}
+
+{
+	int local_var;
+	int maxval;
+	maxval = max(left, right);
+}
+
+// inline 被扩展之后
+// max里面的max_value会被mangling，现在假设为__max_maxval
+int __max_maxval;
+maxval = (__max_maxval = left > right ? left : right), __max_maxval;
+
+
+class Point
+{
+public:
+    Point() : mX(1), mY(2) { cout << "point" << endl; }
+    virtual ~Point() { cout << "~point" << endl; }
+protected:
+    int mX,mY;
+};
+
+class Point3D : public virtual Point
+{
+public:    
+    Point3D() : mZ(3) { cout << "point3d" << endl; }
+    virtual ~Point3D() { cout << "~point3d" << endl; }
+	virtual void VirFun1() { cout << "~VirFun1" << endl; }
+	
+protected:
+    int mZ;
+};
+
+class Vertex : public virtual Point
+{
+public:
+    Vertex() : mAngle(4) { cout << "vertex" << endl; }
+    virtual ~Vertex() { cout << "~vertex" << endl; }
+	virtual void VirFun2() { cout << "~VirFun2" << endl; }
+	
+protected:
+    int mAngle;
+
+};
+
+class Vertex3D : public Point3D, public Vertex
+{
+public:
+    Vertex3D() { cout << "vertex3D" << endl; }
+    virtual ~Vertex3D() { cout << "~vertex3D" << endl; }
+	virtual void VirFun3() { cout << "~VirFun3" << endl; }
+};
+
+class PVertex : public Vertex3D
+{
+public:
+    PVertex() : mCount(5) { cout << "PVertex3D" << endl; }
+    virtual ~PVertex() { cout << "~PVertex3D" << endl; }
+	virtual void VirFun4() { cout << "~VirFun4" << endl; }
+
+protected:
+    int mCount;
+};
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <thread>
 
 #include "objsize.h"
 #include "data_semantics.h"
@@ -8,6 +9,11 @@
 #include "analysis_adjust_this.h"
 #include "default_constructor.cpp"
 #include "compiler_optimization.h"
+#include "ctor_dctor_copy_semantic.h"
+#include "static_local_obj.h"
+#include "temporary_object.h"
+#include "exception.h"
+#include "type_cast.h"
 
 using std::cout;
 using std::endl;
@@ -333,8 +339,72 @@ void test_memeber_layout()
 }
 #endif // _MSC_VER
 
+
+class Animal
+{
+public:
+    Animal() 
+    {
+        int i = 0;
+    }
+};
+
+class Dog : virtual public Animal
+{
+public:    
+    Dog() { 
+        int i = 0; 
+    }
+};
+
+class Cat : virtual public Animal
+{
+public:    
+    Cat() {
+        int i = 0; 
+    }
+};
+
+class DogCat : public Dog, public Cat
+{
+public:
+    DogCat() { 
+        int i = 0; 
+    }
+};
+
+void fun()
+{
+    Dog dog;
+
+    DogCat dogCat;
+}
+
+#include <vector>
+
+using std::vector;
+
+class Bar
+{
+public:
+	static Bar *getInstance()
+	{
+		static Bar s_instance;
+		return &s_instance;
+	}
+
+    void GetName()
+    { cout << "Bar Name" << endl; }
+
+private:
+    Bar() { cout << "Bar ctor" << endl; }
+    ~Bar() {}
+};
+
 int main(int argc, char *argv[])
 {
+    // fun();
+
 	//print_address();
 
 	//test_vtbl_address();
@@ -349,6 +419,7 @@ int main(int argc, char *argv[])
 
 	// defualt_constructor::test_compiler_generator_def_ctor();
 	// defualt_constructor::test_compiler_generator_def_copy_ctor();
+    // defualt_constructor::test_compiler_geneator_def_dctor();
 
 	// compiler_optimization::test_compiler_optimization();
 	// compiler_optimization::test_initialization();
@@ -366,12 +437,50 @@ int main(int argc, char *argv[])
     // data_semantics::test_inherit_class_member_layout();
     // data_semantics::test_virtual_base_table();
     // data_semantics::test_member_point();
+    // data_semantics::test_member_layout();
+    // data_semantics::test_call_member();
+    // data_semantics::test_member_initialize();
+    // data_semantics::test_member_effective();
 
     // function_semantic::test_normal_call();
     // function_semantic::test_virtual_static_call();
     // function_semantic::test_complie_runtime_bind();
     // function_semantic::test_multi_virtual_base_dtor();
-    function_semantic::test_rtti();
+    // function_semantic::test_rtti();
+    // function_semantic::test_multi_inherit();
+    // function_semantic::test_function_pointer();
+    // function_semantic::test_virtual_fucntion_pointer();
+    // function_semantic::test_mult_inherit_vir_fun_pointer();
+    // function_semantic::test_virtual_mult_inherit_vir_fun_pointer();
+
+    // object_ctor_dtor_copy_semantic::test_pod_type();
+    // cout << "------------start main------------" << endl;
+    // object_ctor_dtor_copy_semantic::test_obj_ctor();
+    // cout << "------------end main------------" << endl;
+    // object_ctor_dtor_copy_semantic::test_virtual_inherit_ctor();
+
+    // object_ctor_dtor_copy_semantic::test_object_array_ctor_dtor();
+    // object_ctor_dtor_copy_semantic::test_object_array_ctor_dtor();
+    // object_ctor_dtor_copy_semantic::test_new_obj();
+
+
+    // static_local_obj::test_static_local_obj();
+    // static_local_obj::test_static_local_obj();
+
+//    static_local_obj::static_local_obj();
+//    static_local_obj::static_local_obj();
+//
+//    static static_local_obj::Obj obj;
+//    obj.number = 1;
+    // cout << obj.number << endl;
+
+    // temporary_object::test_implicit_convert();
+    // temporary_object::test_ret_obj();
+
+    _test_exception::test_exception();
+
+    type_cast::test_static_cast();
+
 
 #ifdef _MSC_VER
 	system("pause");

@@ -11,17 +11,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\analysis_virtual_by_tools.cpp" />
     <ClCompile Include="..\source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\analysis_adjust_this.h" />
     <ClInclude Include="..\source\compiler_optimization.h" />
+    <ClInclude Include="..\source\ctor_dctor_copy_semantic.h" />
     <ClInclude Include="..\source\data_semantics.h" />
     <ClInclude Include="..\source\default_constructor.cpp" />
+    <ClInclude Include="..\source\exception.h" />
     <ClInclude Include="..\source\function_semantic.h" />
     <ClInclude Include="..\source\initialization_list.h" />
     <ClInclude Include="..\source\objsize.h" />
+    <ClInclude Include="..\source\static_local_obj.h" />
+    <ClInclude Include="..\source\temporary_object.h" />
+    <ClInclude Include="..\source\type_cast.h" />
     <ClInclude Include="..\source\virtual_fun_table.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -40,7 +44,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -72,6 +76,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalOptions> /Zc:forScope /Zc:threadSafeInit- %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
